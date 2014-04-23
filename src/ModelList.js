@@ -196,21 +196,21 @@ angular.module("ModelList", []).factory("ModelList", [function() {
 
       // Wrap each method with a wrapper function that updates the
       // length property
-			/* jshint loopfunc: true */
+      /* jshint loopfunc: true */
       for (var fnName in this) {
         if (this.hasOwnProperty(fnName)) {
-					(function(fn, fnName) {
-						if (!isFunction(fn)) {
-							return;
-						}
+          (function(fn, fnName) {
+            if (!isFunction(fn)) {
+              return;
+            }
 
-						this[fnName] = bind(this, function() {
-							var result = fn.apply(this, arguments);
+            this[fnName] = bind(this, function() {
+              var result = fn.apply(this, arguments);
 
-							this.length = list.length;
-							return result;
-						});
-					}.call(this, this[fnName], fnName));
+              this.length = list.length;
+              return result;
+            });
+          }.call(this, this[fnName], fnName));
         }
       }
     };
