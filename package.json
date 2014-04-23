@@ -1,0 +1,33 @@
+{
+  "name": "angular-modellist",
+  "version": "0.0.1",
+  "description": "angular-modellist =================",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt karma"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/steelsojka/angular-modellist.git"
+  },
+  "keywords": [
+    "angular",
+    "model"
+  ],
+  "author": "Steven Sojka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/steelsojka/angular-modellist/issues"
+  },
+  "homepage": "https://github.com/steelsojka/angular-modellist",
+  "devDependencies": {
+    "karma": "~0.12.9",
+    "gulp-karma": "0.0.4",
+    "karma-jasmine": "~0.1.5",
+    "karma-phantomjs-launcher": "~0.1.4",
+    "grunt": "~0.4.4",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-karma": "~0.8.2"
+  }
+}
