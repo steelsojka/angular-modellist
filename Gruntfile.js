@@ -1,5 +1,13 @@
 module.exports = function(grunt) {
 
+	var buildHeader = [
+		"/**",
+		" * <%= pkg.name %> v<%= pkg.version %> by <%= pkg.author %>",
+		" * <%= pkg.repository.url %>",
+		" * License: <%= pkg.license %>",
+		" */"
+	].join("\n");
+
 	grunt.initConfig({
 		pkg: grunt.file.readJSON("package.json"),
 		jshint: {
@@ -7,6 +15,11 @@ module.exports = function(grunt) {
 			options: grunt.file.readJSON(".jshintrc")
 		},
 		uglify: {
+			options: {
+				banner: buildHeader,
+				sourceMap: true,
+				sourceMapName: "build/<%= pkg.name %>.map"
+			},
 			dist: {
 				files: {
 					'build/<%= pkg.name %>.min.js': ["src/ModelList.js"]

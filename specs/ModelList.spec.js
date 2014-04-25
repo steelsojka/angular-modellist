@@ -8,31 +8,32 @@ describe("ModelList - Service", function() {
   }));
 
   it("should create an instance of model list", function() {
-    expect(ModelList().getBindableList).toBeDefined();
+    expect(new ModelList().getBindableList).toBeDefined();
+    expect(ModelList.create().getBindableList).toBeDefined();
   });
 
   it("should return an array", function() {
-    var list = ModelList();
+    var list = new ModelList();
 
     expect(angular.isArray(list.getBindableList())).toBe(true);
   });
 
   it("should use the array passed in to the factory", function() {
     var array = ["hello"];
-    var list = ModelList(array);
+    var list = new ModelList(array);
 
     expect(list.getBindableList()).toBe(array);
   });
 
   it("should clone the passed in array", function() {
     var array = ["hello"];
-    var list = ModelList(array, true);
+    var list = new ModelList(array, true);
 
     expect(list.getBindableList()).not.toBe(array);
   });
 
   it("should push to the array", function() {
-    var list = ModelList();
+    var list = new ModelList();
 
     list.push("test");
     expect(list.length).toBe(1);
@@ -40,7 +41,7 @@ describe("ModelList - Service", function() {
   });
 
   it("should pop from the array", function() {
-    var list = ModelList(["test", "woot"]);
+    var list = new ModelList(["test", "woot"]);
     var item = list.pop();
 
     expect(list.length).toBe(1);
@@ -49,7 +50,7 @@ describe("ModelList - Service", function() {
   });
 
   it("should shift the array", function() {
-    var list = ModelList(["test", "woot"]);
+    var list = new ModelList(["test", "woot"]);
     var item = list.shift();
 
     expect(list.length).toBe(1);
@@ -58,7 +59,7 @@ describe("ModelList - Service", function() {
   });
 
   it("should unshift the array", function() {
-    var list = ModelList(["woot"]);
+    var list = new ModelList(["woot"]);
 
     list.unshift("test");
 
@@ -68,7 +69,7 @@ describe("ModelList - Service", function() {
 });
 
   it("should splice the array", function() {
-    var list = ModelList(["test", "woot"]);
+    var list = new ModelList(["test", "woot"]);
     var item = list.splice(0, 1);
 
     expect(list.length).toBe(1);
@@ -82,7 +83,7 @@ describe("ModelList - Service", function() {
   });
 
   it("should loop over the array", function() {
-    var list = ModelList(["test", "woot"]);
+    var list = new ModelList(["test", "woot"]);
     var spy = jasmine.createSpy();
 
     list.forEach(spy);
@@ -93,7 +94,7 @@ describe("ModelList - Service", function() {
 
   it("should map the list, but retain the same reference", function() {
     var array = ["test", "woot"];
-    var list = ModelList(array);
+    var list = new ModelList(array);
 
     list.map(function(item) {
       return item + "-yes";
@@ -107,7 +108,7 @@ describe("ModelList - Service", function() {
 
   it("should overwrite the array while retaining the same array instance", function() {
     var array = ["test", "woot"];
-    var list = ModelList(array);
+    var list = new ModelList(array);
 
     list.overwrite(["boom"]);
 
@@ -118,7 +119,7 @@ describe("ModelList - Service", function() {
 
   it("should clean the array while retaining the same array instance", function() {
     var array = ["test", "woot"];
-    var list = ModelList(array);
+    var list = new ModelList(array);
 
     list.clean();
 
@@ -129,7 +130,7 @@ describe("ModelList - Service", function() {
 
   it("should set an item in the list", function() {
     var array = ["test", "woot"];
-    var list = ModelList(array);
+    var list = new ModelList(array);
 
     list.set("boom", 1);
 
@@ -141,7 +142,7 @@ describe("ModelList - Service", function() {
   it("should remove an item from the array by instance", function() {
     var item1 = {}, item2 = {};
     var array = [item1, item2];
-    var list = ModelList(array);
+    var list = new ModelList(array);
 
     list.pull(item1);
 
@@ -151,7 +152,7 @@ describe("ModelList - Service", function() {
 
   it("should concat to the array", function() {
     var array = ["test"];
-    var list = ModelList(array);
+    var list = new ModelList(array);
 
     list.concat(["boo"], ["yes"]);
 
@@ -165,7 +166,7 @@ describe("ModelList - Service", function() {
 
   it("should filter the array", function() {
     var array = ["test", "item1", "item2"];
-    var list = ModelList(array);
+    var list = new ModelList(array);
 
     list.filter(function(item) {
       return item !== "item1";
@@ -180,7 +181,7 @@ describe("ModelList - Service", function() {
   it("should clone the list", function() {
     var array = ["test"];
 
-    var list = ModelList(array);
+    var list = new ModelList(array);
     var clone = list.clone();
 
     expect(list.getBindableList()).not.toBe(clone.getBindableList());

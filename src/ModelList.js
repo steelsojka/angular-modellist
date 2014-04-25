@@ -230,8 +230,9 @@ angular.module("ModelList", []).factory("ModelList", [function() {
       }
     };
 
-    return function(list, clone) {
-      return new ModelList(list, clone);
+    ModelList.create = function(array, clone) {
+      return new ModelList(array, clone);
     };
-  }
-]);
+
+    return ModelList;
+}]);

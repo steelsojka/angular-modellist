@@ -25,7 +25,7 @@ var myCtrl2 = function(myService) {
 This service provides an object that wraps an array, but always keeps the same instance when operations are performed on it.
 
 ```javascript
-// myService.data = ModelList();
+// myService.data = new ModelList();
 
 var myCtrl1 = function(myService) {
 	$scope.arrayData = myService.data;
@@ -55,7 +55,7 @@ Inject:
 ```javascript
 angular.module("myApp", ["ModelList"]).factory("myService", function(ModelList, $http) {
 	
-	var myService = ModelList();
+	var myService = new ModelList();
 
 	myService.update = function() {
 		$http.get("myUrl").success(function(res) {
@@ -98,13 +98,16 @@ Most array methods are supported in their native form except a couple:
 - `concat`: Mutates the array and does not return a new array
 - `filter`: Mutates the array and does not return a new array
 
-Custom methods:
+####Custom methods:#####
 
-- `get(Number)` Gets an item at index
-- `set(*, Number)` Sets an item at index
+- `get(Number:index)` Gets an item at index
+- `set(*, Number:index)` Sets an item at index
 - `clean()`: Empties the array
-- `overwrite(Array)`: Overwrites the array with the items in the new array
+- `overwrite(Array:array)`: Overwrites the array with the items in the new array
 - `clone()`: Returns a new ModelList object with a cloned list
 - `getBindableList()`: Returns the array. Only should be used for binding
 
 A `length` property is also kept in sync just like native array behaviour.
+
+####Static methods:####
+- `create(Array:array, [Boolean:clone])`
