@@ -92,11 +92,30 @@ Both of the `ng-repeat` directives will be in sync when the list is updated.
 API
 ---
 
+####Native methods:####
 Most array methods are supported in their native form except a couple:
 
+- `join`
+- `pop`
+- `push`
+- `reverse`
+- `shift`
+- `unshift` 
+- `splice`
+- `sort`
+- `forEach`: Uses angulars `forEach` if not supported
+- `some`
+- `every`
+- `indexOf`: Uses a minimal implementation if not supported
+- `lastIndexOf`
+- `reduce`: Uses a minimal implementation if not supported
+- `reduceRight`
 - `map`: Mutates the array and does not return a new array
 - `concat`: Mutates the array and does not return a new array
 - `filter`: Mutates the array and does not return a new array
+- `slice`: Mutates the array and does not return a new array
+
+If your browser doesn't support the method natively, it won't be available.
 
 ####Custom methods:#####
 
@@ -110,4 +129,4 @@ Most array methods are supported in their native form except a couple:
 A `length` property is also kept in sync just like native array behaviour.
 
 ####Static methods:####
-- `create(Array:array, [Boolean:clone])`
+- `create(Array:array, [Boolean:clone])` Returns a new instance of ModelList

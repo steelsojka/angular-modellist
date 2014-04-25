@@ -73,49 +73,79 @@
  *
  * @return ModelList
  */
-angular.module("ModelList", []).factory("ModelList", [function() {
+;(function(exports) {
     "use strict";
 
-    var isArray = angular.isArray;
-    var bind = angular.bind;
-    var forEach = angular.forEach;
-    var isFunction = angular.isFunction;
     var arrayPrototype = Array.prototype;
+
+    var isDefined = function(value) {
+      return typeof value !== "undefined";
+    };
+
+    var isFunction = function(fn) {
+      return typeof fn === "function";
+    };
+    
+    var isNumber = function(value) {
+      return typeof value === "number";
+    };
+
+    var isArray = Array.isArray || function(value) {
+      return String.prototype.toString.call(value) === '[object Array]';
+    };
+
+    var bind = function(context, fn) {
+      return function() {
+        return arguments.length ? fn.apply(context, arguments): fn.call(context);
+      };
+    };
+
+    var forEach = arrayPrototype.forEach || function(fn, context) {
+      for (var i = 0, len = this.length; i < len; i++) {
+        fn.call(context, this[i], i);
+      }
+    };
+
+    var indexOf = arrayPrototype.indexOf || function(element) {
+      for (var i = 0, len = this.length; i < len; i++) {
+        if (this[i] === element) {
+          return i;
+        }
+      }
+
+      return -1;
+    };
+
+    var reduce = arrayPrototype.reduce || function(fn, start) {
+      var result = start;
+
+      for (var i = 0, len = this.length; i < len; i++) {
+        result = fn(result, this[i]);
+      }
+
+      return result;
+    };
+
+    var isAngular = typeof angular !== "undefined";
+    var isNode = typeof module !== "undefined";
     var slice = arrayPrototype.slice;
 
     var arrayMethods = [
       "join", "pop", "push", "reverse", "shift", "unshift", 
-      "slice", "splice", "sort", "forEach", "some", "every", "indexOf", 
+      "splice", "sort", "forEach", "some", "every", "indexOf", 
       "lastIndexOf", "reduce", "reduceRight"
     ];
+
 
     // Quick polyfills for features that aren't supported.
     // These polyfills are just rough barebones implementations.
     // If you need almost native implementation use a proper
     // shim or polyfill.
     var polys = {
-      indexOf: function(element) {
-        for (var i = 0, len = this.length; i < len; i++) {
-          if (this[i] === element) {
-            return i;
-          }
-        }
-
-        return -1;
-      },
-      reduce: function(fn, start) {
-        var result = start;
-
-        for (var i = 0, len = this.length; i < len; i++) {
-          result = fn(result, this[i]);
-        }
-
-        return result;
-      }
+      forEach: forEach,
+      reduce: reduce,
+      indexOf: indexOf
     };
-
-    var reduce = isFunction(arrayPrototype.reduce) ? arrayPrototype.reduce : polys.reduce;
-    var indexOf = isFunction(arrayPrototype.indexOf) ? arrayPrototype.indexOf : polys.indexOF;
 
     var ModelList = function(array, clone) {
       // We don't want this accessable. No one should be able to modify this directly.
@@ -124,19 +154,14 @@ angular.module("ModelList", []).factory("ModelList", [function() {
       this.length = list.length;
 
       // Copy all native array functions and bind them to our list
-      forEach(arrayMethods, function(fnName) {
+      forEach.call(arrayMethods, function(fnName) {
         if (isFunction(arrayPrototype[fnName])) {
           this[fnName] = bind(list, arrayPrototype[fnName]);
         }
       }, this);
 
-      // If the browser doesn't support native forEach use angulars
-      if (!isFunction(this.forEach)) {
-        this.forEach = bind(this, forEach, list);
-      }
-
       // Bind any polyfills if those functions didn't exist
-      forEach(polys, function(fn, name) {
+      forEach.call(polys, function(fn, name) {
         if (!isFunction(fn)) {
           this[name] = bind(list, fn);
         }
@@ -149,6 +174,15 @@ angular.module("ModelList", []).factory("ModelList", [function() {
         for (var i = 0, len = list.length; i < len; i++) {
           list[i] = fn(list[i], i);
         }
+      };
+
+      // Slice returns a new array normally. This slice slices the list
+      // at the indexes mutating the array. If you need to clone the raw array.
+      // use list.getBindableList().slice(0);
+      this.slice = function(start, end) {
+        end = isNumber(end) ? end : list.length - 1;
+        list.splice(0, start);
+        list.splice(end, list.length - 1);
       };
 
       // Concat method that simulates a native concat by pushing all elements
@@ -164,7 +198,7 @@ angular.module("ModelList", []).factory("ModelList", [function() {
       // Filter normally returns a new array. This will filter the array
       // while retaining the same instance.
       this.filter = function(fn) {
-        forEach(list, function(item, index) {
+        this.forEach(function(item, index) {
           if (!fn(item, index)) {
             this.pull(item);
           }
@@ -234,5 +268,14 @@ angular.module("ModelList", []).factory("ModelList", [function() {
       return new ModelList(array, clone);
     };
 
-    return ModelList;
-}]);
+    if (isAngular) {
+      angular.module("ModelList", []).factory("ModelList", [function() {
+        return ModelList;
+      }]);
+    } else if (isNode) {
+      module.exports = ModelList;
+    } else {
+      exports.ModelList = ModelList;
+    }
+
+}(this));

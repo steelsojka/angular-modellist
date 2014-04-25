@@ -68,6 +68,7 @@
     "white"         : false,
     "-W099"         : true,
     "globals"       : {
-      "angular": true
+      "angular": true,
+      "module": true
     }
 }

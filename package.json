@@ -1,10 +1,9 @@
 {
-  "name": "angular-modellist",
-  "version": "0.0.2",
-  "description": "angular-modellist =================",
-  "main": "index.js",
+  "name": "ModelList",
+  "version": "0.1.0",
+  "description": "ModelList",
   "scripts": {
-    "test": "grunt karma"
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
@@ -28,6 +27,7 @@
     "grunt": "~0.4.4",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-uglify": "~0.4.0",
-    "grunt-karma": "~0.8.2"
+    "grunt-karma": "~0.8.2",
+    "grunt-contrib-clean": "~0.5.0"
   }
 }

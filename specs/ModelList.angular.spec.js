@@ -1,4 +1,12 @@
 describe("ModelList - Service", function() {
+  var ModelList;
+
+  beforeEach(module("ModelList"));
+
+  beforeEach(inject(function($injector) {
+    ModelList = $injector.get("ModelList");
+  }));
+
   it("should create an instance of model list", function() {
     expect(new ModelList().getBindableList).toBeDefined();
     expect(ModelList.create().getBindableList).toBeDefined();
@@ -7,7 +15,7 @@ describe("ModelList - Service", function() {
   it("should return an array", function() {
     var list = new ModelList();
 
-    expect(Array.isArray(list.getBindableList())).toBe(true);
+    expect(angular.isArray(list.getBindableList())).toBe(true);
   });
 
   it("should use the array passed in to the factory", function() {
@@ -65,7 +73,7 @@ describe("ModelList - Service", function() {
     var item = list.splice(0, 1);
 
     expect(list.length).toBe(1);
-    expect(Array.isArray(item)).toBe(true);
+    expect(angular.isArray(item)).toBe(true);
 
     list.splice(0, 0, "test");
 
