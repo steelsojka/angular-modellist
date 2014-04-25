@@ -88,3 +88,23 @@ Use the `getBindableList` method to bind to directives.
 ```
 
 Both of the `ng-repeat` directives will be in sync when the list is updated.
+
+API
+---
+
+Most array methods are supported in their native form except a couple:
+
+- `map`: Mutates the array and does not return a new array
+- `concat`: Mutates the array and does not return a new array
+- `filter`: Mutates the array and does not return a new array
+
+Custom methods:
+
+- `get(Number)` Gets an item at index
+- `set(*, Number)` Sets an item at index
+- `clean()`: Empties the array
+- `overwrite(Array)`: Overwrites the array with the items in the new array
+- `clone()`: Returns a new ModelList object with a cloned list
+- `getBindableList()`: Returns the array. Only should be used for binding
+
+A `length` property is also kept in sync just like native array behaviour.

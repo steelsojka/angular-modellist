@@ -63,6 +63,16 @@
  *
  * @param {*} items Items to remove
  */
+/**
+ * @ngdoc method
+ * @name core.ModelList#clone
+ * @methodOf core.ModelList
+ * @description
+ *
+ * Clones the list and returns a new ModelList object
+ *
+ * @return ModelList
+ */
 angular.module("ModelList", []).factory("ModelList", [function() {
     "use strict";
 
@@ -192,6 +202,11 @@ angular.module("ModelList", []).factory("ModelList", [function() {
         for (var i = 0, len = items.length; i < len; i++) {
           list.splice(indexOf.call(list, items[i]), 1);
         }
+      };
+
+      // Clones this list and returns a new ModelList
+      this.clone = function() {
+        return new ModelList(list, true);
       };
 
       // Wrap each method with a wrapper function that updates the

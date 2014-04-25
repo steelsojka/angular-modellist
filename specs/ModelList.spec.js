@@ -176,4 +176,13 @@ describe("ModelList - Service", function() {
     expect(list.get(1)).toBe("item2");
     expect(list.getBindableList()).toBe(array);
   });
+
+  it("should clone the list", function() {
+    var array = ["test"];
+
+    var list = ModelList(array);
+    var clone = list.clone();
+
+    expect(list.getBindableList()).not.toBe(clone.getBindableList());
+  });
 });
