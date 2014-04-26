@@ -97,7 +97,7 @@ Both of the `ng-repeat` directives will be in sync when the list is updated.
 ####NodeJS####
 
 ```javascript
-var ModelLIst = require("ModelList");
+var ModelLIst = require("modellist");
 
 var list = new ModelList();
 ```
