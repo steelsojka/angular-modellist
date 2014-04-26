@@ -2,6 +2,7 @@ angular-modellist
 =================
 
 [![Build Status](https://travis-ci.org/steelsojka/angular-modellist.svg?branch=master)](https://travis-ci.org/steelsojka/angular-modellist)
+[![NPM version](https://badge.fury.io/js/modellist.svg)](http://badge.fury.io/js/modellist)
 
 Why?
 ----
@@ -45,6 +46,8 @@ var myCtrl2 = function(myService) {
 ```
 How To Use: 
 -----------
+
+####AngularJS####
 
 Just include the module into your app:
 
@@ -90,6 +93,21 @@ Use the `getBindableList` method to bind to directives.
 ```
 
 Both of the `ng-repeat` directives will be in sync when the list is updated.
+
+####NodeJS####
+
+```javascript
+var ModelLIst = require("ModelList");
+
+var list = new ModelList();
+```
+
+####Browser####
+The `ModelList` class will be available on the window object
+
+```javascript
+var list = new ModelList();
+```
 
 API
 ---
