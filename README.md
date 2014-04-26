@@ -1,6 +1,8 @@
 angular-modellist
 =================
 
+[![Build Status](https://travis-ci.org/steelsojka/angular-modellist.svg?branch=master)](https://travis-ci.org/steelsojka/angular-modellist)
+
 Why?
 ----
 When storing model data in a service, you most likely will need to bind to it in your view(s).
