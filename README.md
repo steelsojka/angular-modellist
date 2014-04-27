@@ -150,3 +150,4 @@ A `length` property is also kept in sync just like native array behaviour.
 
 ####Static methods:####
 - `create(Array:array, [Boolean:clone])` Returns a new instance of ModelList
+- `convert(Object:object, [Boolean:deep])` Converts all array instances into ModelList instances

@@ -1,80 +1,8 @@
-/**
- * @ngdoc service
- * @name core.ModelList
- * @description
- *
- * A special list type that always keeps the same instance of the array. Useful for
- * binding data to services and used in view creation. 
- */
-/**
- * @ngdoc method
- * @name core.ModeList#getBindableList
- * @methodOf core.ModeList
- * @description
- *
- * Returns the array behind the List. This should only be used for binding to it.
- * You should not modify the array directly.
- */
-/**
- * @ngdoc method
- * @name core.ModelList#overwrite
- * @methodOf core.ModelList
- * @description
- *
- * Overwrites the array with a new one while keeping the same array instance
- * so as to not break bindings.
- *
- * @param {Array} array The array to overwrite with
- */
-/**
- * @ngdoc method
- * @name core.ModelList#set
- * @methodOf core.ModelList
- * @description
- *
- * Sets an item at array position.
- *
- * @param {*} item The item to set
- * @param {Number} index The index to set
- */
-/**
- * @ngdoc method
- * @name core.ModelList#get
- * @methodOf core.ModelList
- * @description
- *
- * Gets an item at array position.
- */
-/**
- * @ngdoc method
- * @name core.ModelList#clean
- * @methodOf core.ModelList
- * @description
- *
- * Empties the array while keeping the same instance.
- */
-/**
- * @ngdoc method
- * @name core.ModelList#pull
- * @methodOf core.ModelList
- * @description
- *
- * Removes an item instance from the array.
- *
- * @param {*} items Items to remove
- */
-/**
- * @ngdoc method
- * @name core.ModelList#clone
- * @methodOf core.ModelList
- * @description
- *
- * Clones the list and returns a new ModelList object
- *
- * @return ModelList
- */
 ;(function(exports) {
     "use strict";
+
+    var isAngular = typeof angular !== "undefined";
+    var isNode = typeof module !== "undefined";
 
     var arrayPrototype = Array.prototype;
 
@@ -92,6 +20,10 @@
 
     var isArray = Array.isArray || function(value) {
       return String.prototype.toString.call(value) === '[object Array]';
+    };
+
+    var isObject = function(value) {
+      return Object.prototype.toString.call(value) === "[object Object]";
     };
 
     var bind = function(context, fn) {
@@ -126,8 +58,6 @@
       return result;
     };
 
-    var isAngular = typeof angular !== "undefined";
-    var isNode = typeof module !== "undefined";
     var slice = arrayPrototype.slice;
 
     var arrayMethods = [
@@ -266,6 +196,33 @@
 
     ModelList.create = function(array, clone) {
       return new ModelList(array, clone);
+    };
+
+    // Converts all array instances into ModelList instances
+    // on an object. Optional deep conversion.
+    ModelList.convert = function(object, deep) {
+      for (var key in object) {
+        if (object.hasOwnProperty(key)) {
+          var item = object[key];
+
+          if (isArray(item)) {
+            object[key] = new ModelList(item);
+
+            if (!deep) {
+              continue;
+            }
+            
+            // Traverse through the array for objects if deep
+            for (var i = 0, len = item.length; i < len; i++) {
+              if (isObject(item[i])) {
+                ModelList.convert(item[i]);
+              }
+            }
+          } else if (isObject(item) && deep) {
+            ModelList.convert(item);
+          }
+        }
+      }
     };
 
     if (isAngular) {

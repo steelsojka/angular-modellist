@@ -200,4 +200,40 @@ describe("ModelList - Service", function() {
     expect(list.get(1)).toBe("test3");
     expect(list.get(2)).toBe("test4");
   });
+
+  it("should shallowly convert all array instances to ModelList instances", function() {
+    var obj = {
+      key1: "test",
+      key2: [1],
+      key3: {
+        nested1: []
+      },
+      key4: [2]
+    };
+
+    ModelList.convert(obj);
+
+    expect(obj.key1 instanceof ModelList).toBe(false);
+    expect(obj.key2 instanceof ModelList).toBe(true);
+    expect(obj.key3.nested1 instanceof ModelList).toBe(false);
+    expect(obj.key4 instanceof ModelList).toBe(true);
+  });
+
+  it("should deeply convert all array instances to ModelList instances", function() {
+    var obj = {
+      key1: "test",
+      key2: [1],
+      key3: {
+        nested1: []
+      },
+      key4: [2]
+    };
+
+    ModelList.convert(obj, true);
+
+    expect(obj.key1 instanceof ModelList).toBe(false);
+    expect(obj.key2 instanceof ModelList).toBe(true);
+    expect(obj.key3.nested1 instanceof ModelList).toBe(true);
+    expect(obj.key4 instanceof ModelList).toBe(true);
+  });
 });
