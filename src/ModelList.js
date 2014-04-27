@@ -5,6 +5,14 @@
     var isNode = typeof module !== "undefined";
 
     var arrayPrototype = Array.prototype;
+    var slice = arrayPrototype.slice;
+    var toString = Object.prototype.toString;
+
+    var arrayMethods = [
+      "join", "pop", "push", "reverse", "shift", "unshift", 
+      "splice", "sort", "forEach", "some", "every", "indexOf", 
+      "lastIndexOf", "reduce", "reduceRight"
+    ];
 
     var isDefined = function(value) {
       return typeof value !== "undefined";
@@ -13,17 +21,13 @@
     var isFunction = function(fn) {
       return typeof fn === "function";
     };
-    
-    var isNumber = function(value) {
-      return typeof value === "number";
-    };
 
     var isArray = Array.isArray || function(value) {
-      return String.prototype.toString.call(value) === '[object Array]';
+      return toString.call(value) === '[object Array]';
     };
 
     var isObject = function(value) {
-      return Object.prototype.toString.call(value) === "[object Object]";
+      return toString.call(value) === "[object Object]";
     };
 
     var bind = function(context, fn) {
@@ -32,11 +36,19 @@
       };
     };
 
+    var chainable = function(context, fn) {
+      return function() {
+        fn.apply(this, arguments);
+        return context;
+      };
+    };
+
     var forEach = arrayPrototype.forEach || function(fn, context) {
       for (var i = 0, len = this.length; i < len; i++) {
         fn.call(context, this[i], i);
       }
     };
+
 
     var indexOf = arrayPrototype.indexOf || function(element) {
       for (var i = 0, len = this.length; i < len; i++) {
@@ -48,32 +60,12 @@
       return -1;
     };
 
-    var reduce = arrayPrototype.reduce || function(fn, start) {
-      var result = start;
-
-      for (var i = 0, len = this.length; i < len; i++) {
-        result = fn(result, this[i]);
-      }
-
-      return result;
-    };
-
-    var slice = arrayPrototype.slice;
-
-    var arrayMethods = [
-      "join", "pop", "push", "reverse", "shift", "unshift", 
-      "splice", "sort", "forEach", "some", "every", "indexOf", 
-      "lastIndexOf", "reduce", "reduceRight"
-    ];
-
-
     // Quick polyfills for features that aren't supported.
     // These polyfills are just rough barebones implementations.
     // If you need almost native implementation use a proper
     // shim or polyfill.
     var polys = {
       forEach: forEach,
-      reduce: reduce,
       indexOf: indexOf
     };
 
@@ -92,7 +84,7 @@
 
       // Bind any polyfills if those functions didn't exist
       forEach.call(polys, function(fn, name) {
-        if (!isFunction(fn)) {
+        if (!isFunction(this[name])) {
           this[name] = bind(list, fn);
         }
       }, this);
@@ -100,40 +92,37 @@
       // Map normally returns a new instance.
       // We want to keep the same instance so this map function
       // will mutate the array and NOT return a new array.
-      this.map = function(fn) {
+      this.map = chainable(this, function(fn) {
         for (var i = 0, len = list.length; i < len; i++) {
           list[i] = fn(list[i], i);
         }
-      };
+      });
 
       // Slice returns a new array normally. This slice slices the list
       // at the indexes mutating the array. If you need to clone the raw array.
       // use list.getBindableList().slice(0);
-      this.slice = function(start, end) {
-        end = isNumber(end) ? end : list.length - 1;
+      this.slice = chainable(this, function(start, end) {
+        end = isDefined(end) ? end : list.length - 1;
         list.splice(0, start);
         list.splice(end, list.length - 1);
-      };
+      });
 
       // Concat method that simulates a native concat by pushing all elements
       // of the arrays into the array instance.
-      this.concat = function(array) {
-        var result = reduce.call(slice.call(arguments, 0), function(result, arg) {
-          return result.concat(arg);
-        }, []);
-        
+      this.concat = chainable(this, function(array) {
+        var result = arrayPrototype.concat.apply([], arguments);
         list.push.apply(list, result);
-      };
+      });
 
       // Filter normally returns a new array. This will filter the array
       // while retaining the same instance.
-      this.filter = function(fn) {
+      this.filter = chainable(this, function(fn) {
         this.forEach(function(item, index) {
           if (!fn(item, index)) {
             this.pull(item);
           }
         }, this);
-      };
+      });
 
       // This is the function that should be used to bind.
       // Normally used for an `ng-repeat` directive.
@@ -141,32 +130,32 @@
         return list;
       };
 
-      this.overwrite = function(array) {
+      this.overwrite = chainable(this, function(array) {
         this.clean();
         this.concat(array);
-      };
+      });
 
-      this.set = function(item, index) {
-        list.splice(index, 0, item);
-      };
+      this.set = chainable(this, function(item, index) {
+        list.splice(index, 1, item);
+      });
 
       // We need to clean the array but still keep the same instance.
-      this.clean = function() {
+      this.clean = chainable(this, function() {
         list.splice(0, list.length);
-      };
+      });
 
       this.get = function(index) {
         return list[index];
       };
       
       // Convience method for removing object instances from the array
-      this.pull = function() {
+      this.pull = chainable(this, function() {
         var items = slice.call(arguments, 0);
 
         for (var i = 0, len = items.length; i < len; i++) {
           list.splice(indexOf.call(list, items[i]), 1);
         }
-      };
+      });
 
       // Clones this list and returns a new ModelList
       this.clone = function() {
@@ -215,11 +204,11 @@
             // Traverse through the array for objects if deep
             for (var i = 0, len = item.length; i < len; i++) {
               if (isObject(item[i])) {
-                ModelList.convert(item[i]);
+                ModelList.convert(item[i], deep);
               }
             }
           } else if (isObject(item) && deep) {
-            ModelList.convert(item);
+            ModelList.convert(item, deep);
           }
         }
       }

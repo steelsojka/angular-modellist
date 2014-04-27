@@ -134,7 +134,7 @@ describe("ModelList - Service", function() {
 
     list.set("boom", 1);
 
-    expect(list.length).toBe(3);
+    expect(list.length).toBe(2);
     expect(list.getBindableList()).toBe(array);
     expect(list.get(1)).toBe("boom");
   });
@@ -232,7 +232,11 @@ describe("ModelList - Service", function() {
       key1: "test",
       key2: [1],
       key3: {
-        nested1: []
+        nested1: [
+          {
+            array: []
+          }
+        ]
       },
       key4: [2]
     };
@@ -243,5 +247,27 @@ describe("ModelList - Service", function() {
     expect(obj.key2 instanceof ModelList).toBe(true);
     expect(obj.key3.nested1 instanceof ModelList).toBe(true);
     expect(obj.key4 instanceof ModelList).toBe(true);
+    expect(obj.key3.nested1.get(0).array instanceof ModelList).toBe(true);
+  });
+
+  it("should chain methods together", function() {
+    var array = ["item1", "item2", "item3", "item4", "item5"];
+
+    var list = new ModelList(array);
+
+    list
+      .map(function(item) {
+        return item + "-test";
+      })
+      .pull("item3-test")
+      .concat(["item6"])
+      .slice(0, 3)
+      .set("boom", 0);
+
+    expect(list.length).toBe(3);
+    expect(list.get(0)).toBe("boom");
+    expect(list.get(1)).toBe("item2-test");
+    expect(list.get(2)).toBe("item4-test");
+
   });
 });

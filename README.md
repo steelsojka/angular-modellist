@@ -123,28 +123,29 @@ Most array methods are supported in their native form except a couple:
 - `unshift` 
 - `splice`
 - `sort`
-- `forEach`: Uses angulars `forEach` if not supported
+- `forEach`: Uses a minimal implementation if not supported
 - `some`
 - `every`
 - `indexOf`: Uses a minimal implementation if not supported
 - `lastIndexOf`
-- `reduce`: Uses a minimal implementation if not supported
+- `reduce`
 - `reduceRight`
-- `map`: Mutates the array and does not return a new array
-- `concat`: Mutates the array and does not return a new array
-- `filter`: Mutates the array and does not return a new array
-- `slice`: Mutates the array and does not return a new array
+- `map`: `(Chainable)` Mutates the array and does not return a new array
+- `concat`: `(Chainable)` Mutates the array and does not return a new array
+- `filter`: `(Chainable)` Mutates the array and does not return a new array
+- `slice`: `(Chainable)` Mutates the array and does not return a new array
 
 If your browser doesn't support the method natively, it won't be available.
 
 ####Custom methods:#####
 
-- `get(Number:index)` Gets an item at index
-- `set(*, Number:index)` Sets an item at index
-- `clean()`: Empties the array
-- `overwrite(Array:array)`: Overwrites the array with the items in the new array
+- `get(Number:index)`: Gets an item at index
+- `set(*, Number:index)`: `(Chainable)` Sets an item at index
+- `clean()`: `(Chainable)` Empties the array
+- `overwrite(Array:array)`: `(Chainable)` Overwrites the array with the items in the new array
 - `clone()`: Returns a new ModelList object with a cloned list
 - `getBindableList()`: Returns the array. Only should be used for binding
+- `pull(*)`: `(Chainable)` Removes object instances from the array
 
 A `length` property is also kept in sync just like native array behaviour.
 
