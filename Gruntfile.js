@@ -1,3 +1,5 @@
+var exec = require("child_process").exec;
+
 module.exports = function(grunt) {
 
 	var buildHeader = [
@@ -34,12 +36,26 @@ module.exports = function(grunt) {
 		}
 	});
 
+  grunt.registerTask("coveralls", function() {
+    var done = this.async();
+
+    if (!process.env.CI) {
+      console.log("Aborting coveralls. Not a CI environment!");
+      done();
+      return;
+    }
+
+    var path = grunt.file.expand("coverage/**/lcov.info")[0];
+
+    exec("cat \"" + path + "\" | node_modules/coveralls/bin/coveralls.js", done);
+  });
+
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-karma");
 
-  grunt.registerTask("test", ["jshint", "karma"]);
+  grunt.registerTask("test", ["jshint", "karma", "coveralls"]);
 
   grunt.registerTask("build", [
     "clean",
