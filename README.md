@@ -3,6 +3,7 @@ angular-modellist
 
 [![Build Status](https://travis-ci.org/steelsojka/angular-modellist.svg?branch=master)](https://travis-ci.org/steelsojka/angular-modellist)
 [![NPM version](https://badge.fury.io/js/modellist.svg)](http://badge.fury.io/js/modellist)
+[![Coverage Status](https://coveralls.io/repos/steelsojka/angular-modellist/badge.png)](https://coveralls.io/r/steelsojka/angular-modellist)
 
 Why?
 ----
