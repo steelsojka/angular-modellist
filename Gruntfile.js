@@ -28,11 +28,8 @@ module.exports = function(grunt) {
 		},
     clean: ["build"],
 		karma: {
-			browser: {
-				configFile: "karma.conf.js"
-			},
       angular: {
-        configFile: "karma.angular.conf.js"
+        configFile: "karma.conf.js"
       }
 		}
 	});

@@ -83,11 +83,11 @@
       }, this);
 
       // Bind any polyfills if those functions didn't exist
-      forEach.call(polys, function(fn, name) {
-        if (!isFunction(this[name])) {
-          this[name] = bind(list, fn);
+      for (var name in polys) {
+        if (polys.hasOwnProperty(name) && !isFunction(this[name])) {
+          this[name] = bind(list, polys[name]);
         }
-      }, this);
+      }
 
       // Map normally returns a new instance.
       // We want to keep the same instance so this map function
