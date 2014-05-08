@@ -320,4 +320,21 @@ describe("ModelList - Service", function() {
     expect(list.get(0).key).toBeUndefined();
   });
 
+  it("should merge 2 objects with the custom merger", function() {
+    var array = [{id: "test"}, {id: "test2"}];
+    var list = new ModelList(array);
+
+    var merger = function(item1, item2) {
+      item1.custom = item2.key;
+    };
+
+    list.merge([
+      {key: "woot"},
+      {key: "blorg"}
+    ], null, merger);
+
+    expect(list.get(0).custom).toBe("woot");
+    expect(list.get(1).custom).toBe("blorg");
+  });
+
 });

@@ -156,8 +156,9 @@
         list.splice(0, list.length);
       });
 
-      this.merge = chainable(this, function(array, comparator) {
+      this.merge = chainable(this, function(array, comparator, merger) {
         var compareFn = null;
+        var mergeFn = isFunction(merger) ? merger : extend;
 
         if (isFunction(comparator)) {
           compareFn = comparator;
@@ -171,17 +172,17 @@
           var match = false;
 
           // If no comparator then we just do a 1 to 1 with the indexes
-          if (isDefined(comparator)) {
+          if (compareFn !== null) {
             for (var x = 0, len2 = list.length; x < len2; x++) {
               if (compareFn(list[x], array[i])) {
                 match = true;
-                extend(list[x], array[i]);
+                mergeFn(list[x], array[i]);
                 break;
               }
             }
           } else if (isDefined(list[i])) {
             match = true;
-            extend(list[i], array[i]);
+            mergeFn(list[i], array[i]);
           }
 
           // If there is no match, add it to the list

@@ -147,9 +147,10 @@ If your browser doesn't support the method natively, it won't be available.
 - `clone()`: Returns a new ModelList object with a cloned list
 - `getBindableList()`: Returns the array. Only should be used for binding
 - `pull(*)`: `(Chainable)` Removes object instances from the array
-- `merge(Array:list, [Function|String:comparator])`: `(Chainable)` Merges an array of objects with the list of objects.
+- `merge(Array:list, [Function|String:comparator], [Function:merger])`: `(Chainable)` Merges an array of objects with the list of objects.
   Useful for merging API responses while keeping the same object references. The comparator is used for matching
-  2 objects together. It can be an ID key or a custom compare function.
+  2 objects together. It can be an ID key or a custom compare function. An optional merger function can be used
+  to perform the merge. If omitted a default object `extend` will be performed.
 
 A `length` property is also kept in sync just like native array behaviour.
 
