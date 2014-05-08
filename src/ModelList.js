@@ -22,6 +22,10 @@
       return typeof fn === "function";
     };
 
+    var isString = function(string) {
+      return typeof string === "string";
+    };
+
     var isArray = Array.isArray || function(value) {
       return toString.call(value) === '[object Array]';
     };
@@ -41,6 +45,14 @@
         fn.apply(this, arguments);
         return context;
       };
+    };
+
+    var extend = function(obj1, obj2) {
+      for (var key in obj2) {
+        if (obj2.hasOwnProperty(key)) {
+          obj1[key] = obj2[key];
+        }
+      }
     };
 
     var forEach = arrayPrototype.forEach || function(fn, context) {
@@ -142,6 +154,41 @@
       // We need to clean the array but still keep the same instance.
       this.clean = chainable(this, function() {
         list.splice(0, list.length);
+      });
+
+      this.merge = chainable(this, function(array, comparator) {
+        var compareFn = null;
+
+        if (isFunction(comparator)) {
+          compareFn = comparator;
+        } else if (isString(comparator)){
+          compareFn = function(item1, item2) {
+            return item1[comparator] === item2[comparator];
+          };
+        }
+
+        for (var i = 0, len = array.length; i < len; i++) {
+          var match = false;
+
+          // If no comparator then we just do a 1 to 1 with the indexes
+          if (isDefined(comparator)) {
+            for (var x = 0, len2 = list.length; x < len2; x++) {
+              if (compareFn(list[x], array[i])) {
+                match = true;
+                extend(list[x], array[i]);
+                break;
+              }
+            }
+          } else if (isDefined(list[i])) {
+            match = true;
+            extend(list[i], array[i]);
+          }
+
+          // If there is no match, add it to the list
+          if (!match) {
+            list.splice(i, 0, array[i]);
+          }
+        }
       });
 
       this.get = function(index) {

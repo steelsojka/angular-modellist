@@ -270,4 +270,54 @@ describe("ModelList - Service", function() {
     expect(list.get(2)).toBe("item4-test");
 
   });
+
+  it("should merge the objects on the 2 arrays", function() {
+    var array = [{id: "test"}, {id: "test2"}];
+    var list = new ModelList(array);
+
+    list.merge([
+      {key: "woot"},
+      {key: "blorg"}
+    ]);
+
+    expect(list.get(0)).toBe(array[0]);
+    expect(list.get(1)).toBe(array[1]);
+    expect(list.get(0).key).toBe("woot");
+    expect(list.get(1).key).toBe("blorg");
+  });
+
+  it("should merge the objects based on the id", function() {
+    var array = [{id: "test"}, {id: "test2"}, {id: "test4"}];
+    var list = new ModelList(array);
+
+    list.merge([
+      {key: "woot", id: "test2"},
+      {key: "blorg", id: "test"},
+      {key: "mock", id: "test3"},
+      {key: "look", id:"test4"}
+    ], "id");
+
+    expect(list.get(1).key).toBe("woot");
+    expect(list.get(0).key).toBe("blorg");
+    expect(list.length).toBe(4);
+    expect(list.get(2).key).toBe("mock");
+    expect(list.get(3).key).toBe("look");
+  });
+
+  it("should merge the objects based on a custom comparator", function() {
+    var array = [{id: "test"}, {id: "test2"}];
+    var list = new ModelList(array);
+
+    var comparator = function(item1, item2) {
+      return item1.id !== "test";
+    };
+
+    list.merge([
+      {key: "woot"},
+    ], comparator);
+
+    expect(list.get(1).key).toBe("woot");
+    expect(list.get(0).key).toBeUndefined();
+  });
+
 });
