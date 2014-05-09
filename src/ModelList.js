@@ -156,7 +156,14 @@
         list.splice(0, list.length);
       });
 
-      this.merge = chainable(this, function(array, comparator, merger) {
+      // Merges another list of objects into this one
+      this.merge = chainable(this, function(array, options) {
+        options = options || {};
+
+        var comparator = options.comparator;
+        var merger = options.merger;
+        var accumulator = options.accumulator;
+
         var compareFn = null;
         var mergeFn = isFunction(merger) ? merger : extend;
 
@@ -185,9 +192,9 @@
             mergeFn(list[i], array[i]);
           }
 
-          // If there is no match, add it to the list
+          // If there is no match, add it to the list or a custom accumulator function
           if (!match) {
-            list.splice(i, 0, array[i]);
+            (isFunction(accumulator) ? accumulator.call(this, array[i], i) : list.splice(i, 0, array[i]));
           }
         }
       });

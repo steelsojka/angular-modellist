@@ -295,7 +295,9 @@ describe("ModelList - Service", function() {
       {key: "blorg", id: "test"},
       {key: "mock", id: "test3"},
       {key: "look", id:"test4"}
-    ], "id");
+    ], {
+      comparator: "id"
+    });
 
     expect(list.get(1).key).toBe("woot");
     expect(list.get(0).key).toBe("blorg");
@@ -314,7 +316,9 @@ describe("ModelList - Service", function() {
 
     list.merge([
       {key: "woot"},
-    ], comparator);
+    ], {
+      comparator: comparator
+    });
 
     expect(list.get(1).key).toBe("woot");
     expect(list.get(0).key).toBeUndefined();
@@ -331,10 +335,32 @@ describe("ModelList - Service", function() {
     list.merge([
       {key: "woot"},
       {key: "blorg"}
-    ], null, merger);
+    ], {
+      merger: merger
+    });
 
     expect(list.get(0).custom).toBe("woot");
     expect(list.get(1).custom).toBe("blorg");
   });
 
+  it("should merge 2 objects with a custom accumulator", function() {
+    var array = [{id: "test"}, {id: "test2"}, {id: "test4"}];
+    var list = new ModelList(array);
+
+    list.merge([
+      {key: "woot", id: "test2"},
+      {key: "blorg", id: "test"},
+      {key: "mock", id: "test3"},
+      {key: "look", id:"test4"}
+    ], {
+      comparator: "id",
+      accumulator: function(item, index) {
+        expect(index).toBe(2);
+
+        this.push(item);
+      }
+    });
+
+    expect(list.get(3).key).toBe("mock");
+  });
 });
