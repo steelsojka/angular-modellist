@@ -169,6 +169,7 @@
         var remover = options.remover || noop;
 
         var mergedItems = [];
+        var newItems = [];
 
         var compareFn = null;
         var mergeFn = isFunction(merger) ? merger : extend;
@@ -202,12 +203,13 @@
 
           // If there is no match, add it to the list or a custom accumulator function
           if (!match) {
+            newItems.push(array[i]);
             (isFunction(accumulator) ? accumulator.call(this, array[i], i) : list.splice(i, 0, array[i]));
           }        
         }
 
         for (var y = 0, len3 = list.length; y < len3; y++) {
-          if (indexOf.call(mergedItems, list[y]) === -1) {
+          if (indexOf.call(mergedItems, list[y]) === -1 && indexOf.call(newItems, list[y]) === -1) {
             remover(this, list[y]);
           }
         }
