@@ -7,6 +7,7 @@
     var arrayPrototype = Array.prototype;
     var slice = arrayPrototype.slice;
     var toString = Object.prototype.toString;
+    var noop = function() {};
 
     var arrayMethods = [
       "join", "pop", "push", "reverse", "shift", "unshift", 
@@ -164,6 +165,11 @@
         var merger = options.merger;
         var accumulator = options.accumulator;
 
+        // This method is for when an item currently in our list does not match a merged item
+        var remover = options.remover || noop;
+
+        var mergedItems = [];
+
         var compareFn = null;
         var mergeFn = isFunction(merger) ? merger : extend;
 
@@ -184,17 +190,25 @@
               if (compareFn(list[x], array[i])) {
                 match = true;
                 mergeFn(list[x], array[i]);
+                mergedItems.push(list[x]);
                 break;
               }
             }
           } else if (isDefined(list[i])) {
             match = true;
             mergeFn(list[i], array[i]);
+            mergedItems.push(list[i]);
           }
 
           // If there is no match, add it to the list or a custom accumulator function
           if (!match) {
             (isFunction(accumulator) ? accumulator.call(this, array[i], i) : list.splice(i, 0, array[i]));
+          }        
+        }
+
+        for (var y = 0, len3 = list.length; y < len3; y++) {
+          if (indexOf.call(mergedItems, list[y]) === -1) {
+            remover(this, list[y]);
           }
         }
       });

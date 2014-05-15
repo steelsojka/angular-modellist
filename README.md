@@ -150,7 +150,8 @@ If your browser doesn't support the method natively, it won't be available.
 - `merge(Array:list, [Object:options])`: `(Chainable)` Merges an array of objects with the list of objects. Useful for merging API responses while keeping the same object references.
   * `[Function|String:options.comparator]`: The comparator is used for matching 2 objects together. It can be an ID key or a custom compare function. 
   * `[Function:options.merger])`: An optional merger function can be used to perform the merge. If omitted a default object `extend` will be performed.
-  * `[Function:options.accumulator]`: AN optional function to handle non matched elements. If omitted it will perform a splice of the element at it's position.
+  * `[Function:options.accumulator]`: An optional function to handle non matched elements. If omitted it will perform a splice of the element at it's position.
+  * `[Function:options.remover]`: An optional function to handle elements in the list but not in the response. If omitted it will be a noop function.
 
 A `length` property is also kept in sync just like native array behaviour.
 

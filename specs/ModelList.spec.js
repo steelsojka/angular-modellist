@@ -363,4 +363,22 @@ describe("ModelList - Service", function() {
 
     expect(list.get(3).key).toBe("mock");
   });
+
+  it("should merge 2 objects and call the remover function and non merged elements", function() {
+    var array = [{id: "test"}, {id: "test2"}, {id: "test4"}];
+    var list = new ModelList(array);
+    var options = {
+      comparator: "id",
+      remover: function(collection, item) {
+        collection.pull(item);
+      }
+    };
+
+    list.merge([
+      {key: "woot", id: "test2"},
+      {key: "blorg", id: "test"}
+    ], options);
+
+    expect(list.length).toBe(2);
+  });
 });
