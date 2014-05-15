@@ -224,7 +224,11 @@
         var items = slice.call(arguments, 0);
 
         for (var i = 0, len = items.length; i < len; i++) {
-          list.splice(indexOf.call(list, items[i]), 1);
+          var index = indexOf.call(list, items[i]);
+
+          if (index !== -1) {
+            list.splice(index, 1);
+          }
         }
       });
 
