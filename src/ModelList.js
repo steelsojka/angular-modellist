@@ -203,8 +203,13 @@
 
           // If there is no match, add it to the list or a custom accumulator function
           if (!match) {
-            newItems.push(array[i]);
-            (isFunction(accumulator) ? accumulator.call(this, array[i], i) : list.splice(i, 0, array[i]));
+            if (isFunction(accumulator)) {
+              var value = accumulator.call(this, array[i], i);
+              newItems.push(!isDefined(value) ? array[i] : value);
+            } else {
+              newItems.push(array[i]);
+              list.splice(i, 0, array[i]);
+            }
           }        
         }
 

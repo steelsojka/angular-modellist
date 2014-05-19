@@ -151,6 +151,7 @@ If your browser doesn't support the method natively, it won't be available.
   * `[Function|String:options.comparator]`: The comparator is used for matching 2 objects together. It can be an ID key or a custom compare function. 
   * `[Function:options.merger])`: An optional merger function can be used to perform the merge. If omitted a default object `extend` will be performed.
   * `[Function:options.accumulator]`: An optional function to handle non matched elements. If omitted it will perform a splice of the element at it's position.
+    If you transform the value in this function you must return it so the `ModelList` can keep track of it.
   * `[Function:options.remover]`: An optional function to handle elements in the list but not in the response. If omitted it will be a noop function.
 
 A `length` property is also kept in sync just like native array behaviour.

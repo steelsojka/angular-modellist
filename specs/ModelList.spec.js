@@ -381,4 +381,31 @@ describe("ModelList - Service", function() {
 
     expect(list.length).toBe(2);
   });
+
+  it("should merge 2 objects keeping track of transformed values", function() {
+    var array = [{id: "test"}, {id: "test2"}, {id: "test4"}];
+    var list = new ModelList(array);
+
+    list.merge([
+      {key: "woot", id: "test2"},
+      {key: "blorg", id: "test"},
+      {key: "mock", id: "test3"},
+      {key: "look", id: "test4"}
+    ], {
+      comparator: "id",
+      accumulator: function(item, index) {
+        expect(index).toBe(2);
+
+        var newValue = {
+          key: "BAM"
+        };
+
+        this.splice(index, 0, newValue);
+
+        return newValue;
+      }
+    });
+    
+    expect(list.get(2).key).toBe("BAM");
+  });
 });
